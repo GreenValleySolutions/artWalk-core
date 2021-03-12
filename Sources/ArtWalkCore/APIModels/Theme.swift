@@ -1,7 +1,7 @@
 
 import Foundation
 
-enum Theme {
+public enum Theme {
     case red, purple, orange, yellow, green, blue, gray
     case custom(Double,Double,Double,Double)
 }
@@ -50,7 +50,7 @@ extension Theme: Codable {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         switch self {
@@ -74,7 +74,7 @@ extension Theme: Codable {
         }
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let base = try container.decode(Base.self, forKey: .base)
         
@@ -101,7 +101,7 @@ extension Theme: Codable {
 }
 
 extension Theme: RawRepresentable {
-    init?(rawValue: String) {
+    public init?(rawValue: String) {
         switch rawValue {
         case "red": self = .red
         case "purple": self = .purple
@@ -128,7 +128,7 @@ extension Theme: RawRepresentable {
         }
     }
     
-    var rawValue: String {
+    public var rawValue: String {
         switch self {
         
         case .red: return "red"
@@ -145,7 +145,7 @@ extension Theme: RawRepresentable {
 }
 
 extension Theme: CaseIterable {
-    static var allCases: [Theme] {
+    public static var allCases: [Theme] {
         [.red, .purple, .orange, .yellow, .green, .blue, .gray]
     }
 }

@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct SocialMedia: Codable {
+public struct SocialMedia: Codable {
     let platform, handle: String
     let link: String
 }

@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct Location: Codable {
+public struct Location: Codable {
     let address1: String
     let address2, address3: String?
     let city: String

@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct Artist: Codable {
+public struct Artist: Codable {
     let id: String
     let first_name: String
     let last_name: String

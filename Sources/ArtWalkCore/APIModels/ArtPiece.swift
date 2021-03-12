@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct ArtPiece: Codable {
+public struct ArtPiece: Codable {
     let id: String
     let title: String
     let description: String
@@ -13,7 +13,7 @@ struct ArtPiece: Codable {
     let ar_models: [ArtPieceARModel]?
 }
 
-struct ArtPieceARModel: Codable {
+public struct ArtPieceARModel: Codable {
     let id: String
     let name: String
     let description: String
@@ -21,11 +21,15 @@ struct ArtPieceARModel: Codable {
     let scene_planes: ARModelPlaneDetectionOptions
 }
 
-struct ARModelPlaneDetectionOptions: OptionSet, Codable {
-    var rawValue: Int
+public struct ARModelPlaneDetectionOptions: OptionSet, Codable {
+    public var rawValue: Int
     
     static let horizontal = ARModelPlaneDetectionOptions(rawValue: 1 << 0)
     static let vertical = ARModelPlaneDetectionOptions(rawValue: 1 << 1)
     
     static let all: ARModelPlaneDetectionOptions = [.horizontal, .vertical]
+    
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
 }

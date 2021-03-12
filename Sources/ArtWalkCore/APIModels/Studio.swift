@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct Studio: Codable {
+public struct Studio: Codable {
     let name: String
     let address: Location
     let website: String?

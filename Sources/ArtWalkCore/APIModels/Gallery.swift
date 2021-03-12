@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct Gallery: Codable {
+public struct Gallery: Codable {
     let id: String
     let name: String
     let about: String
