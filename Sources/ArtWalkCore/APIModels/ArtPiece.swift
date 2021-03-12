@@ -22,7 +22,7 @@ public struct ArtPieceARModel: Codable {
 }
 
 public struct ARModelPlaneDetectionOptions: OptionSet, Codable {
-    public public var rawValue: Int
+    public var rawValue: Int
     
     public static let horizontal = ARModelPlaneDetectionOptions(rawValue: 1 << 0)
     public static let vertical = ARModelPlaneDetectionOptions(rawValue: 1 << 1)
