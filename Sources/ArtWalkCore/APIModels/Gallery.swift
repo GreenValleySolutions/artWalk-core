@@ -12,7 +12,7 @@ struct Gallery: Codable {
     let theme: Theme
     let social_media: [SocialMedia]?
     let store_info: StoreInfo?
-    let exhibitions: [ExhibitionAPIModel]?
+    let exhibitions: [Exhibition]?
     let has_past_exhibitions: Bool
     let has_active_exhibition: Bool
 }
