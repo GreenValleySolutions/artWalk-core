@@ -17,12 +17,12 @@ extension Theme: Codable {
     }
     
     private struct CustomColorParams: Codable {
-        let red: Double
-        let green: Double
-        let blue: Double
-        let alpha: Double
+        public let red: Double
+        public let green: Double
+        public let blue: Double
+        public let alpha: Double
         
-        init(red: Double, green: Double, blue: Double, alpha: Double) {
+        public init(red: Double, green: Double, blue: Double, alpha: Double) {
             self.red = red
             self.green = green
             self.blue = blue
@@ -141,7 +141,6 @@ extension Theme: RawRepresentable {
         case .custom(let red, let green, let blue, let alpha): return "custom\(red),\(green),\(blue),\(alpha)"
         }
     }
-    
 }
 
 extension Theme: CaseIterable {

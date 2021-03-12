@@ -2,6 +2,6 @@
 import Foundation
 
 public struct SocialMedia: Codable {
-    let platform, handle: String
-    let link: String
+    public let platform, handle: String
+    public let link: String
 }

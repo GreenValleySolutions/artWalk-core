@@ -9,10 +9,10 @@ public enum UserRole: String, Codable, CaseIterable {
 }
 
 public struct User: Codable {
-    let id: String
-    let first_name: String
-    let last_name: String
-    let email: String
-    let username: String
-    let role: UserRole
+    public let id: String
+    public let first_name: String
+    public let last_name: String
+    public let email: String
+    public let username: String
+    public let role: UserRole
 }

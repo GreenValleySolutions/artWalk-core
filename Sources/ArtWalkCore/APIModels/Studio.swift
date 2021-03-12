@@ -2,9 +2,9 @@
 import Foundation
 
 public struct Studio: Codable {
-    let name: String
-    let address: Location
-    let website: String?
-    let email: String?
-    let phone_number: String?
+    public let name: String
+    public let address: Location
+    public let website: String?
+    public let email: String?
+    public let phone_number: String?
 }

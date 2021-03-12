@@ -2,7 +2,7 @@
 import Foundation
 
 public struct StoreInfo: Codable {
-    var shipping: Bool = false
-    var framing: Bool = false
-    var taxId: String = ""
+    public var shipping: Bool = false
+    public var framing: Bool = false
+    public var taxId: String = ""
 }

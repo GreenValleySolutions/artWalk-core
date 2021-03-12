@@ -2,17 +2,17 @@
 import Foundation
 
 public struct Gallery: Codable {
-    let id: String
-    let name: String
-    let about: String
-    let address: Location
-    let phone: String?
-    let website: String?
-    let hours: [Hour]?
-    let theme: Theme
-    let social_media: [SocialMedia]?
-    let store_info: StoreInfo?
-    let exhibitions: [Exhibition]?
-    let has_past_exhibitions: Bool
-    let has_active_exhibition: Bool
+    public let id: String
+    public let name: String
+    public let about: String
+    public let address: Location
+    public let phone: String?
+    public let website: String?
+    public let hours: [Hour]?
+    public let theme: Theme
+    public let social_media: [SocialMedia]?
+    public let store_info: StoreInfo?
+    public let exhibitions: [Exhibition]?
+    public let has_past_exhibitions: Bool
+    public let has_active_exhibition: Bool
 }

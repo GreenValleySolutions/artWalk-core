@@ -2,11 +2,11 @@
 import Foundation
 
 public struct Location: Codable {
-    let address1: String
-    let address2, address3: String?
-    let city: String
-    let state: String
-    let zipcode: String
+    public let address1: String
+    public let address2, address3: String?
+    public let city: String
+    public let state: String
+    public let zipcode: String
     
     enum CodingKeys: String, CodingKey {
         case address1 = "address_1"
