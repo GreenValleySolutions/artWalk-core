@@ -9,7 +9,7 @@ public enum UserRole: String, Codable, CaseIterable {
 }
 
 public struct User: Codable {
-    public let id: String
+    public let id: UUID?
     public let first_name: String
     public let last_name: String
     public let email: String

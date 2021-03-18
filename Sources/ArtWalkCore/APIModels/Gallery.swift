@@ -2,7 +2,7 @@
 import Foundation
 
 public struct Gallery: Codable {
-    public let id: String
+    public let id: UUID?
     public let name: String
     public let about: String
     public let address: Location

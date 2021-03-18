@@ -2,7 +2,7 @@
 import Foundation
 
 public struct Artist: Codable {
-    public let id: String
+    public let id: UUID?
     public let first_name: String
     public let last_name: String
     public let alias: String
