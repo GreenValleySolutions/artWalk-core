@@ -3,7 +3,7 @@ import Foundation
 
 public struct Location: Codable {
     public let address1: String
-    public let address2, address3: String?
+    public let address2: String?
     public let city: String
     public let state: String
     public let zipcode: String
@@ -11,7 +11,6 @@ public struct Location: Codable {
     enum CodingKeys: String, CodingKey {
         case address1 = "address_1"
         case address2 = "address_2"
-        case address3 = "address_3"
         case city, state, zipcode
     }
 }
