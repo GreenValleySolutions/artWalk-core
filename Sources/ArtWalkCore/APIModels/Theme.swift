@@ -1,150 +1,96 @@
 
 import Foundation
+import SwiftUI
 
-public enum Theme {
-    case red, purple, orange, yellow, green, blue, gray
-    case custom(Double,Double,Double,Double)
+public struct Theme: Codable {
+    
+    private(set) var color: Color
+    
+    public init?(withHexColor hex: String) {
+        let r, g, b, a: CGFloat
+        
+        if hex.hasPrefix("#") {
+            let start = hex.index(hex.startIndex, offsetBy: 1)
+            let hexColor = String(hex[start...])
+            
+            if hexColor.count == 8 {
+                let scanner = Scanner(string: hexColor)
+                var hexNumber: UInt64 = 0
+                
+                if scanner.scanHexInt64(&hexNumber) {
+                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
+                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
+                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
+                    a = CGFloat(hexNumber & 0x000000ff) / 255
+                    
+                    self.color = Color(red: Double(r), green: Double(g), blue: Double(b), opacity: Double(a))
+                }
+            }
+        }
+        
+        return nil
+    }
 }
 
-extension Theme: Codable {
-    private enum CodingKeys: String, CodingKey {
-        case base
-        case customColorParams = "customColor"
-    }
+@available(OSX 11.0, *)
+fileprivate extension Color {
+    #if os(macOS)
+    typealias SystemColor = NSColor
+    #else
+    typealias SystemColor = UIColor
+    #endif
     
-    private enum Base: String, Codable {
-        case red, purple, orange, yellow, green, blue, gray, custom
+    var colorComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        
+        #if os(macOS)
+        SystemColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+        // Note that non RGB color will raise an exception, that I don't now how to catch because it is an Objc exception.
+        #else
+        guard SystemColor(self).getRed(&r, green: &g, blue: &b, alpha: &a) else {
+            // Pay attention that the color should be convertible into RGB format
+            // Colors using hue, saturation and brightness won't work
+            return nil
+        }
+        #endif
+        
+        return (r, g, b, a)
     }
-    
-    private struct CustomColorParams: Codable {
-        public let red: Double
-        public let green: Double
-        public let blue: Double
-        public let alpha: Double
-        
-        public init(red: Double, green: Double, blue: Double, alpha: Double) {
-            self.red = red
-            self.green = green
-            self.blue = blue
-            self.alpha = alpha
-        }
-        
-        enum CodingKeys: String, CodingKey {
-            case red, green, blue, alpha
-        }
-        
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(red, forKey: .red)
-            try container.encode(green, forKey: .green)
-            try container.encode(blue, forKey: .blue)
-            try container.encode(alpha, forKey: .alpha)
-        }
+}
 
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            red = try container.decode(Double.self, forKey: .red)
-            green = try container.decode(Double.self, forKey: .green)
-            blue = try container.decode(Double.self, forKey: .blue)
-            alpha = try container.decode(Double.self, forKey: .alpha)
-        }
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        switch self {
-        case .red:
-            try container.encode(Base.red, forKey: .base)
-        case .purple:
-            try container.encode(Base.purple, forKey: .base)
-        case .orange:
-            try container.encode(Base.orange, forKey: .base)
-        case .yellow:
-            try container.encode(Base.yellow, forKey: .base)
-        case .green:
-            try container.encode(Base.green, forKey: .base)
-        case .blue:
-            try container.encode(Base.blue, forKey: .base)
-        case .gray:
-            try container.encode(Base.gray, forKey: .base)
-        case .custom(let r, let g, let b, let a):
-            try container.encode(Base.custom, forKey: .base)
-            try container.encode(CustomColorParams(red: r, green: g, blue: b, alpha: a),forKey: .customColorParams)
-        }
+extension Color: Codable {
+    enum CodingKeys: String, CodingKey {
+        case red, green, blue, alpha
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let base = try container.decode(Base.self, forKey: .base)
+        let r = try container.decode(Double.self, forKey: .red)
+        let g = try container.decode(Double.self, forKey: .green)
+        let b = try container.decode(Double.self, forKey: .blue)
+        let a = try container.decode(Double.self, forKey: .alpha)
         
-        switch base {
-        case .red:
-            self = .red
-        case .purple:
-            self = .purple
-        case .orange:
-            self = .orange
-        case .yellow:
-            self = .yellow
-        case .green:
-            self = .green
-        case .blue:
-            self = .blue
-        case .gray:
-            self = .gray
-        case .custom:
-            let customValues = try container.decode(CustomColorParams.self, forKey: .customColorParams)
-            self = .custom(customValues.red, customValues.green, customValues.blue, customValues.alpha)
-        }
+        self.init(red: r, green: g, blue: b, opacity: a)
     }
-}
 
-extension Theme: RawRepresentable {
-    public init?(rawValue: String) {
-        switch rawValue {
-        case "red": self = .red
-        case "purple": self = .purple
-        case "orange": self = .orange
-        case "yellow": self = .yellow
-        case "green": self = .green
-        case "blue": self = .blue
-        case "gray": self = .gray
-        default:
-            guard let range = rawValue.range(of: "custom", options: .anchored) else { return nil }
-            guard !(rawValue.suffix(from: range.upperBound).isEmpty) else { return nil }
-            let colorTuple = rawValue.suffix(from: range.upperBound)
-
-            guard !(colorTuple.components(separatedBy: ",").isEmpty) else { return nil }
-            let colorArray = colorTuple.components(separatedBy: ",")
+    public func encode(to encoder: Encoder) throws {
+        if #available(OSX 11.0, *) {
+            guard let colorComponents = self.colorComponents else {
+                return
+            }
             
-            guard colorArray.count == 4,
-                  let red = Double(colorArray[0]),
-                  let green = Double(colorArray[1]),
-                  let blue = Double(colorArray[2]),
-                  let alpha = Double(colorArray[3]) else { return nil }
-            guard alpha >= 0.0, alpha <= 1.0 else { return nil }
-            self = .custom(red, green, blue, alpha)
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            
+            try container.encode(colorComponents.red, forKey: .red)
+            try container.encode(colorComponents.green, forKey: .green)
+            try container.encode(colorComponents.blue, forKey: .blue)
+            try container.encode(colorComponents.blue, forKey: .alpha)
+            
+        } else {
+            // Fallback on earlier versions
         }
-    }
-    
-    public var rawValue: String {
-        switch self {
-        
-        case .red: return "red"
-        case .purple: return "purlple"
-        case .orange: return "orange"
-        case .yellow: return "yellow"
-        case .green: return "green"
-        case .blue: return "blue"
-        case .gray: return "gray"
-        case .custom(let red, let green, let blue, let alpha): return "custom\(red),\(green),\(blue),\(alpha)"
-        }
-    }
-}
-
-extension Theme: CaseIterable {
-    public static var allCases: [Theme] {
-        [.red, .purple, .orange, .yellow, .green, .blue, .gray]
     }
 }
